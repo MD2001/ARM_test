@@ -14,24 +14,34 @@
 void RCC_voidInitSysClock(void)
 {
     #if RCC_CLOCK_TYPE  == RCC_HSE_CRYSTAL
-        RCC_CR=0x00010000
+        RCC_CR=0x00010000;
         while(GET_BIT(RCC_CR,1)==17);         //stay until External crystal stable
     #elif RCC_CLOCK_TYPE  == RCC_HSE_RC
-       RCC_CR=0x00050000                      //stay until RC external stable
+       RCC_CR=0x00050000;                  //stay until RC external stable
         while(GET_BIT(RCC_CR,1)==17);
     #elif RCC_CLOCK_TYPE  == RCC_HSI    
-        RCC_CR=0x00000081                     //Enable HSI +Termining =0
-        while(GET_BIT(RCC_CR,1)==0);          //stay until HSI stable
+        RCC_CR=0x00000081;                   //Enable HSI +Termining =0
+        while((GET_BIT(RCC_CR,1)) == 0);          //stay until HSI stable
     #elif RCC_CLOCK_TYPE  == RCC_PLL
-        #if RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSE
-
-        #elif RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSE_DIV_2
-
-        #elif RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSI_DIV_2
-        
+        #if RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSI_DIV_2
+        RCC_CFGR=0x00000002|((RCC_PLL_IN_HSI_DIV_2) - 2)<<18;   //add Mul val
+        RCC_CR=0x01000001;
+        #elif RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSE_RC_DIV_2
+        RCC_CFGR=0x00030002|((RCC_PLL_IN_HSI_DIV_2) - 2)<<18;   //add Mul val
+        RCC_CR=0x01050000;
+        #elif RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSE_CRYSTAL_DIV_2
+        RCC_CFGR=0x00030002|((RCC_PLL_IN_HSI_DIV_2) - 2)<<18;   //add Mul val
+        RCC_CR=0x01010000;
+        #elif RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSE_RC
+        RCC_CFGR=0x00010002|((RCC_PLL_IN_HSI_DIV_2) - 2)<<18;   //add Mul val
+        RCC_CR=0x01050000;
+        #elif RCC_PLL_CLOCK_SOURC == RCC_PLL_IN_HSE_CRYSTAL
+        RCC_CFGR=0x00010002|((RCC_PLL_IN_HSI_DIV_2) - 2)<<18;   //add Mul val
+        RCC_CR=0x01010000;
         #else 
         #error "wroing choice RCC_PLL_CLOCK SOURCE"
         #endif
+        while(GET_BIT(RCC_CR,1)==25);         //stay until PLL stable
     #else
         #error "wrroing choice RCC_CLOCK_TYPE"
     #endif

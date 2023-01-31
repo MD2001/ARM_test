@@ -40,9 +40,11 @@
 #define RCC_PLL             3
 
 /*PLL sources*/
-#define RCC_PLL_IN_HSE_DIV_2        0
-#define RCC_PLL_IN_HSI_DIV_2        1
-#define RCC_PLL_IN_HSE              2
+#define RCC_PLL_IN_HSI_DIV_2                0
+#define RCC_PLL_IN_HSE_RC_DIV_2             1
+#define RCC_PLL_IN_HSE_CRYSTAL_DIV_2        2
+#define RCC_PLL_IN_HSE_RC                   3
+#define RCC_PLL_IN_HSE_CRYSTAL              4
 
 
 #endif 
